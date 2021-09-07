@@ -10,3 +10,25 @@ const dbConf = {
 }
 
 // connection db
+let connection;
+
+const handleCon = () => {
+    connection = mysql.createConnection(dbConf);
+    connection.connect( (err) => {
+        if (err) {
+            console.log(`[db error connection] ${err}`);
+            setTimeout(handleCon, 2000);
+        } else{
+            console.log(`DB CONNECTED`)
+        }
+    })
+
+    connection.on('error', err => {
+        console.log(`[db error connection] ${err}`);
+        if( err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleCon();
+        } else {
+            throw err;
+        }
+    })
+}

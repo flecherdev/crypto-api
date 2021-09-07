@@ -50,7 +50,7 @@ const db = {
 };
 
 async function list(tabla) {
-    return db[tabla];
+    return db[tabla] || [];
 }
 
 async function get(tabla, id) {
@@ -59,7 +59,11 @@ async function get(tabla, id) {
 }
 
 async function upsert(tabla, dato) {
+    if (!db[tabla]) {
+        db[tabla] = [];
+    }
     db[tabla].push(data)
+    console.log(db);
 }
 
 async function remove(tabla, id) {
