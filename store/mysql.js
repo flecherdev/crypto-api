@@ -6,7 +6,13 @@ const dbConf = {
     host: config.mysql.host,
     user: config.mysql.user,
     password: config.mysql.password,
-    database: config.mysql.database
+    database: config.mysql.database,
+    pool: {
+        max: config.mysql.pool.max,
+        min: config.mysql.pool.min,
+        acquire: config.mysql.pool.acquire,
+        idle: config.mysql.pool.idle
+    }
 }
 
 // connection db
