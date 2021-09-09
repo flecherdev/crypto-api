@@ -18,7 +18,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    Controller.upsert(req.body)
+    controller.upsert(req.body)
         .then( (currency) => {
             response.success(req, res, currency, 201)
         }).catch(next);

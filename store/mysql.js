@@ -1,3 +1,4 @@
+const { json } = require('express');
 const mysql = require('mysql');
 
 const config = require('../config');
@@ -18,7 +19,7 @@ const dbConf = {
 // connection db
 let connection;
 
-const handleCon = () => {
+function handleCon(){
     connection = mysql.createConnection(dbConf);
     connection.connect( (err) => {
         if (err) {
@@ -37,4 +38,53 @@ const handleCon = () => {
             throw err;
         }
     })
+}
+
+handleCon();
+
+// list
+function list(tabla) {
+    return new Promise((resolve, reject) => {
+        connection.query(`select * from ${dbConf.database}.${tabla}`, (err, data) => {
+            if (err) return reject(err);
+            return resolve(data);
+        });
+    });
+}
+
+function get(tabla, id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`select * from ${dbConf.database}.${tabla} where id=${id}`, (err, data) => {
+            if (err) return reject(err);
+            return resolve(data);
+        });
+    });
+}
+
+function insert(tabla, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`insert into ${dbConf.database}.${tabla} set ?`, data, (err, result) => {
+            if (err) return reject(err);
+            return resolve(result);
+        });
+    });
+}
+
+function update(tabla, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`update ${dbConf.database}.${tabla} set ? where id=?`, [data, data.id], (err, result) => {
+            if (err) return reject(err);
+            return resolve(result);
+        });
+    });
+}
+
+function upsert(tabla, data) {
+    return data && data.id ? update(table, data) : insert(tabla,data);
+}
+
+module.exports = { 
+    list,
+    get,
+    upsert,
 }

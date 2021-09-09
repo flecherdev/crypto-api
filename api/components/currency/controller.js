@@ -1,4 +1,5 @@
-const store = require('../../../store/dummy');
+// const store = require('../../../store/mysql');
+const nanoid = require('nanoid')
 
 const TABLA = 'currencies'
 
@@ -28,6 +29,7 @@ module.exports = function(injectStore) {
 
     return {
         list,
-        get
+        get,
+        upsert
     }
 }

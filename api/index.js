@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 // Router
 app.use('/currencies', currency);
 
-// Middleware 
+// Middleware for errors
 app.use(error);
 
 app.listen(config.api.port, () => {
