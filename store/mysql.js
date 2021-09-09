@@ -83,6 +83,10 @@ function upsert(tabla, data) {
     return data && data.id ? update(table, data) : insert(tabla,data);
 }
 
+function query(tabla, query, join) {
+
+}
+
 module.exports = { 
     list,
     get,
