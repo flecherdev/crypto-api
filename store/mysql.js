@@ -83,6 +83,12 @@ function upsert(tabla, data) {
     return data && data.id ? update(table, data) : insert(tabla,data);
 }
 
+function getBySymbol(tabla, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`select * from ${dbConf.database}.${tabla} where symbol=${symbol}`)
+    })
+}
+
 function query(tabla, query, join) {
 
 }

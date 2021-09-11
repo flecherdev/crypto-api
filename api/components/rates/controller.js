@@ -7,7 +7,7 @@ module.exports = function(injectStore) {
         store = require('../../../store/dummy')
     }
 
-    // TODO LISTAS POR MEDIO DE QUERY
+    // TODO List with join of currency
     function list(){ 
         return store.list(TABLA)
     }
@@ -16,8 +16,13 @@ module.exports = function(injectStore) {
         return store.get(TABLA, id);
     }
 
+    function getBySymbol(symbol){
+        return store.getBySymbol(TABLA, symbol);
+    }
+
     function upsert(body){
 
+        // created_at : new Date().toISOString()
         const rate = {
             id_currency : body.id_currency,
             value : body.value,
