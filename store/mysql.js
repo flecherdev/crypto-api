@@ -83,9 +83,31 @@ function upsert(tabla, data) {
     return data && data.id ? update(table, data) : insert(tabla,data);
 }
 
-function getBySymbol(tabla, data) {
+function listRates(tabla, join) {
+    let query = `select * from ${dbConf.database}.${tabla} 
+                    inner join ${dbConf.database}.${join} 
+                    on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency;`
+
     return new Promise((resolve, reject) => {
-        connection.query(`select * from ${dbConf.database}.${tabla} where symbol=${symbol}`)
+        connection.query(query, (err, data) => {
+            if (err) return reject(err);
+            console.log(data)
+            let result = data.map( data => {
+                return {
+                    id: data.id,
+                    id_currency: data.id_currency,
+                    value: data.value,
+                    created_at: data.created_at, 
+                    currency: {
+                        id: data.id_currency,
+                        description: data.description, 
+                        symbol: data.symbol
+                    }
+                }
+            })
+            console.log(result)
+            return resolve(result);
+        });
     })
 }
 
@@ -97,4 +119,5 @@ module.exports = {
     list,
     get,
     upsert,
+    listRates,
 }

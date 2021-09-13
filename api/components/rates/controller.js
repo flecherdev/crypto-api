@@ -1,4 +1,5 @@
 const TABLA = 'rates'
+const JOIN = 'currencies'
 
 module.exports = function(injectStore) {
     let store = injectStore;
@@ -9,7 +10,7 @@ module.exports = function(injectStore) {
 
     // TODO List with join of currency
     function list(){ 
-        return store.list(TABLA)
+        return store.listRates(TABLA, JOIN)
     }
 
     function get(id){
