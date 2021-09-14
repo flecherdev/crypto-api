@@ -84,12 +84,13 @@ function upsert(tabla, data) {
 }
 
 function getRates(tabla, join , symbol) {
-    let symbolWhere = symbol ? `where ${dbConf.database}.${join}.symbol = '${symbol}'` : '';
+    let symbolWhere = symbol ? `where ${dbConf.database}.${join}.symbol = '${symbol}'` : ''; 
+    let oderBy = `order by abs( datediff(${dbConf.database}.${tabla}.created_at , now())) limit 1`
     let query = `select * from ${dbConf.database}.${tabla} 
                     inner join ${dbConf.database}.${join} 
                     on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency
                     ${symbolWhere ? symbolWhere : ''}
-                    order by abs( datediff(crypto_db.rates.created_at , now()));`
+                    ${symbolWhere ? oderBy : ''}  ;`
     console.log(query)
 
     return new Promise((resolve, reject) => {
