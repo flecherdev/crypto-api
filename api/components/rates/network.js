@@ -12,8 +12,9 @@ router.get('/', (req, res, next) => {
 });
 
 // get currency for id
-router.get('/:id', (req, res, next) => {
-    controller.get(req.params.id)
+router.get('/:symbol', (req, res, next) => {
+    console.log(req.params.symbol)
+    controller.list(req.params.symbol)
         .then( (currency) => {
             response.success(req, res, currency, 200)
         }).catch(next);
