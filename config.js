@@ -1,7 +1,7 @@
 
 module.exports = {
     api: {
-        port: process.env.API_PORT || 3000
+        port: process.env.NODE_LOCAL_PORT || 3000
     },
     mysql: {
         host: process.env.DB_HOST || '',
