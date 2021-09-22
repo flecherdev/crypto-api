@@ -21,7 +21,7 @@ module.exports = function(injectStore) {
         const rate = {
             id_currency : body.id_currency,
             value : body.value,
-            created_at : new Date()
+            created_at : body.created_at
         }
 
         return store.upsert(TABLA, rate)
@@ -29,6 +29,7 @@ module.exports = function(injectStore) {
 
     return {
         list,
-        upsert
+        upsert,
+        getBySymbol
     }
 }
