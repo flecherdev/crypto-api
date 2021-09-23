@@ -8,9 +8,8 @@ module.exports = function(injectStore) {
         store = require('../../../store/dummy')
     }
 
-    function list(symbol){ 
-        console.log(symbol)
-        return store.getRates(TABLA, JOIN, symbol)
+    function list(symbol, limit){ 
+        return store.getRates(TABLA, JOIN, symbol, limit)
     }
 
     function getBySymbol(symbol){

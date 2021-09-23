@@ -12,9 +12,19 @@ router.get('/', (req, res, next) => {
 });
 
 // get currency for id
-router.get('/:symbol', (req, res, next) => {
+// router.get('/:symbol', (req, res, next) => {
+//     console.log(req.params.symbol)
+//     controller.list(req.params.symbol)
+//         .then( (currency) => {
+//             response.success(req, res, currency, 200)
+//         }).catch(next);
+// });
+
+router.get('/:symbol/:limit?', (req, res, next) => {
     console.log(req.params.symbol)
-    controller.list(req.params.symbol)
+    console.log(req.params.limit)
+
+    controller.list(req.params.symbol, req.params.limit)
         .then( (currency) => {
             response.success(req, res, currency, 200)
         }).catch(next);

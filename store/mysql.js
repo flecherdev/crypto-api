@@ -82,22 +82,23 @@ function upsert(tabla, data) {
     return data && data.id ? update(table, data) : insert(tabla,data);
 }
 
-function getRates(tabla, join , symbol) {
+function getRates(tabla, join , symbol, limit) {
     let symbolWhere = symbol ? `where ${dbConf.database}.${join}.symbol = '${symbol}'` : ''; 
-    let oderBy = `order by abs( datediff(${dbConf.database}.${tabla}.created_at , now())) limit 1`
+    let oderBy = `order by abs( datediff(${dbConf.database}.${tabla}.created_at , now())) limit ${limit ? limit : '1'}`
     let query = `select * from ${dbConf.database}.${tabla} 
                     inner join ${dbConf.database}.${join} 
                     on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency
                     ${symbolWhere ? symbolWhere : ''}
-                    ${symbolWhere ? oderBy : ''}  ;`
+                    ${symbolWhere ? oderBy : ''};`
     console.log(query)
 
     return new Promise((resolve, reject) => {
         connection.query(query, (err, data) => {
             if (err) return reject(err);
             console.log(data)
-            let result = data.map( data => {
-                return {
+            let result = []
+            data.map( data => {
+                result.push( {
                     id: data.id,
                     id_currency: data.id_currency,
                     value: data.value,
@@ -107,10 +108,11 @@ function getRates(tabla, join , symbol) {
                         description: data.description, 
                         symbol: data.symbol
                     }
-                }
+                })
+
             })
-            console.log(result)
-            return resolve(result);
+            console.log(result) // TODO : fixed limit for chart
+            return resolve( data.length > 1 ? result : result[0]);
         });
     })
 }
