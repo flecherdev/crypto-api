@@ -90,7 +90,7 @@ function getRates(tabla, join , symbol, limit) {
                     on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency
                     ${symbolWhere ? symbolWhere : ''}
                     ${symbolWhere ? oderBy : ''};`
-    console.log(query)
+    
 
     return new Promise((resolve, reject) => {
         connection.query(query, (err, data) => {
@@ -111,7 +111,6 @@ function getRates(tabla, join , symbol, limit) {
                 })
 
             })
-            console.log(result) // TODO : fixed limit for chart
             return resolve( data.length > 1 ? result : result[0]);
         });
     })
