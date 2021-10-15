@@ -101,8 +101,6 @@ function getRates(tabla, join , symbol, limit) {
 
     let query = `${select} ${on} ${where} ${orderBy}`
 
-    console.log(query)
-
     return new Promise((resolve, reject) => {
         connection.query(query, (err, data) => {
             if (err) return reject(err);
