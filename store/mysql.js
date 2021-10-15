@@ -53,7 +53,7 @@ function list(tabla) {
 
 function get(tabla, id) {
     return new Promise((resolve, reject) => {
-        connection.query(`select * from ${dbConf.database}.${tabla} where id=${id}`, (err, data) => {
+        connection.query(`select * from ${dbConf.database}.${tabla} where id=?`,id, (err, data) => {
             if (err) return reject(err);
             return resolve(data);
         });
@@ -83,14 +83,25 @@ function upsert(tabla, data) {
 }
 
 function getRates(tabla, join , symbol, limit) {
-    let symbolWhere = symbol ? `where ${dbConf.database}.${join}.symbol = '${symbol}'` : ''; 
-    let oderBy = `order by abs( datediff(${dbConf.database}.${tabla}.created_at , now())) limit ${limit ? limit : '1'}`
-    let query = `select * from ${dbConf.database}.${tabla} 
-                    inner join ${dbConf.database}.${join} 
-                    on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency
-                    ${symbolWhere ? symbolWhere : ''}
-                    ${symbolWhere ? oderBy : ''};`
-    
+
+    // SQL INJECTIONS
+    // let symbolWhere = symbol ? `where ${dbConf.database}.${join}.symbol = '${symbol})'` : ''; 
+    // let oderBy = `order by abs( datediff(${dbConf.database}.${tabla}.created_at , now())) limit ${limit ? limit : '1'}`
+    // let query = `select * from ${dbConf.database}.${tabla}
+    //                 inner join ${dbConf.database}.${join}
+    //                 on ${dbConf.database}.${join}.id = ${dbConf.database}.${tabla}.id_currency
+    //                 ${symbolWhere ? symbolWhere : ''}
+    //                 ${symbolWhere ? oderBy : ''};`
+
+    //WITHOUT SQL INJECTIONS 
+    let select =  mysql.format("select * from ? inner join ?", [mysql.raw(`${dbConf.database}.${tabla}`), mysql.raw(`${dbConf.database}.${join}`)])
+    let on =  mysql.format("on ? = ?", [mysql.raw(`${dbConf.database}.${join}.id`), mysql.raw(`${dbConf.database}.${tabla}.id_currency`)])
+    let where = symbol ? mysql.format("where ?.symbol = ?", [mysql.raw(`${dbConf.database}.${join}`), mysql.raw(mysql.escape(`${symbol}`))]) : ''
+    let orderBy = where ? mysql.format( `order by abs( datediff(?, now())) limit ?`, [mysql.raw(`${dbConf.database}.${tabla}.created_at`),  mysql.raw(` ${limit ? limit : '1'}`) ]) : ''
+
+    let query = `${select} ${on} ${where} ${orderBy}`
+
+    console.log(query)
 
     return new Promise((resolve, reject) => {
         connection.query(query, (err, data) => {
