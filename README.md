@@ -1,13 +1,16 @@
-## Api CRUD example with docker compose
+# Api CRUD example with docker compose
 
-# Variable environment
+## Variable environment
 You have to change the variables or not
 
-# DB
+## DB
 In the file /mysql/db.sql you have to connect for workbench and import the script. 
 
-# Run
+## Run
 docker-compose up --build
 
-# Remove images
+## Remove images
 docker-compose down --rmi all
+
+## Fix issue -> ERROR [internal] load metadata 
+ docker rm -f $(docker ps -a -q)
